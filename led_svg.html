@@ -122,7 +122,11 @@ function update() {
     for(i=0;i<pixels.length;i++) {
         pane = Math.floor(i / (12));
         channel = Math.floor((pane % 6)/2);
-        pixels[i][channel] = Math.min(255, Math.abs((16*(Math.floor(i/4)+frameNumber)) % 512 - 256));
+        if(pane<4) {
+            pixels[i][channel] = Math.min(255, Math.abs((16*(Math.floor(i/4)+frameNumber)) % 512 - 256));
+        } else {
+            pixels[i][channel] = Math.min(255, Math.abs((32*(Math.floor(i%4)+frameNumber)) % 512 - 256));
+        }
     }
 }
 
