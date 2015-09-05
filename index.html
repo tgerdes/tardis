@@ -1,5 +1,6 @@
 <html>
 <meta charset='utf-8'/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js" charset="utf-8"></script>
 <canvas id="myCanvas" width="887" height="87">
 Your browser does not support the HTML5 canvas tag.
 </canvas>
@@ -14,7 +15,7 @@ var OPCArt = function(element, pixelPos) {
 
     this.pixels = new Array(pixelPos.length);
     for(var i=0; i < pixelPos.length; i++) {
-        this.pixels[i] = [0, 0, 0];
+        this.pixels[i] = d3.rgb(0, 0, 0);
     }
 
     this.drawInterval = setInterval(this.draw.bind(this), 16);
@@ -26,9 +27,7 @@ OPCArt.prototype.draw = function() {
     this.ctx.clearRect(0, 0, this.element.width, this.element.height);
 
     for(i=0; i< 96; i++) {
-        this.ctx.fillStyle = "rgb(" + this.pixels[i][0] + ", " +
-                                      this.pixels[i][1] + ", " +
-                                      this.pixels[i][2] + ")";
+        this.ctx.fillStyle = this.pixels[i].toString();
         this.ctx.fillRect.apply(this.ctx, this.pixelPos[i]);
     }
 }
@@ -113,33 +112,33 @@ ExampleArt.prototype.update = function update() {
 }
 
 /// Gradient
-function wrapIndex(i, i_max) {
-   return ((i % i_max) + i_max) % i_max;
-}
 
-function Gradient() {}
+function Gradient() {
+    // Interpolate the range -1, 1 to the integers 0, 255
+    this.interp = d3.scale.linear().domain([-1,1]).rangeRound([0,255]);
+    this.step = 2 * Math.PI / 16;
+}
 Gradient.prototype = Object.create(Art.prototype);
 Gradient.prototype.description = "Cycle single color gradients on each face.";
+
 
 Gradient.prototype.update = function() {
     for(i=0;i<this.pixels.length;i++) {
         var pane = Math.floor(i / (12));
         var x = Math.floor((i % 12) / 4);
         var y = ((i % 12) % 4);
-        var channel = Math.floor((pane % 6)/2);
         if(pane<2) {
-            this.pixels[i][channel] = Math.min(255, Math.abs(wrapIndex(8*(x + this.frameNumber), 512) - 256));
+            this.pixels[i].r = this.interp(Math.sin(this.step * (x+this.frameNumber)));
         } else if (pane < 4) {
-            this.pixels[i][channel] = Math.min(255, Math.abs(wrapIndex(8*(y + this.frameNumber+8), 512) - 256));
+            this.pixels[i].g = this.interp(Math.sin(this.step * (y+this.frameNumber)));
         } else if (pane < 6) {
-            this.pixels[i][channel] = Math.min(255, Math.abs(wrapIndex(8*(x - this.frameNumber-16), 512) - 256));
+            this.pixels[i].b = this.interp(Math.sin(this.step * (x-this.frameNumber)));
         } else {
-            this.pixels[i][0] =
-            this.pixels[i][2] = Math.min(255, Math.abs(wrapIndex(8*(y - this.frameNumber-24), 512) - 256));
+            this.pixels[i].r =
+            this.pixels[i].b = this.interp(Math.sin(this.step * (y-this.frameNumber)));
         }
     }
 }
-
 
 //// Initialize and start the art.
 
