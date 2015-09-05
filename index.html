@@ -113,6 +113,9 @@ ExampleArt.prototype.update = function update() {
 }
 
 /// Gradient
+function wrapIndex(i, i_max) {
+   return ((i % i_max) + i_max) % i_max;
+}
 
 function Gradient() {}
 Gradient.prototype = Object.create(Art.prototype);
@@ -121,11 +124,18 @@ Gradient.prototype.description = "Cycle single color gradients on each face.";
 Gradient.prototype.update = function() {
     for(i=0;i<this.pixels.length;i++) {
         var pane = Math.floor(i / (12));
+        var x = Math.floor((i % 12) / 4);
+        var y = ((i % 12) % 4);
         var channel = Math.floor((pane % 6)/2);
-        if(pane<4) {
-            this.pixels[i][channel] = Math.min(255, Math.abs((16*(Math.floor(i/4)+this.frameNumber)) % 512 - 256));
+        if(pane<2) {
+            this.pixels[i][channel] = Math.min(255, Math.abs(wrapIndex(16*(x + this.frameNumber), 512) - 256));
+        } else if (pane < 4) {
+            this.pixels[i][channel] = Math.min(255, Math.abs(wrapIndex(16*(x - this.frameNumber+8), 512) - 256));
+        } else if (pane < 6) {
+            this.pixels[i][channel] = Math.min(255, Math.abs(wrapIndex(16*(y + this.frameNumber+16), 512) - 256));
         } else {
-            this.pixels[i][channel] = Math.min(255, Math.abs((32*(Math.floor(i%4)+this.frameNumber)) % 512 - 256));
+            this.pixels[i][0] =
+            this.pixels[i][2] = Math.min(255, Math.abs(wrapIndex(16*(y - this.frameNumber+24), 512) - 256));
         }
     }
 }
