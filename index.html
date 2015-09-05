@@ -1,70 +1,144 @@
 <html>
-<canvas id="myCanvas" width="887" height="87" style="border:1px solid #c3c3c3;">
+<meta charset='utf-8'/>
+<canvas id="myCanvas" width="887" height="87">
 Your browser does not support the HTML5 canvas tag.
 </canvas>
 
 
 <script>
-var updateInterval;
-var frameNumber = 0;
-var pixels = new Array(96),
-    pixelPos = new Array(96);
 
-var scale = 1 / 5, 
-    paneHeight = 435 * scale,
-    paneWidth = 410 * scale,
-    paneSep = (45 + 60 + 60) * scale,
-    border = 10 * scale,
-    winWidth = (paneWidth - 4 * border) / 3,
-    winHeight = (paneHeight - 3 * border) / 2;
- 
-for(var i=0;i<pixels.length;i++) {
-    pixels[i] = [0,0,0];
+var OPCArt = function(element, pixelPos) {
+    this.element = element;
+    this.ctx = element.getContext("2d");
+    this.pixelPos = pixelPos;
 
-    var pane = Math.floor(i / 12);
-    var x = Math.floor(i / 4) % 3,
-        y = i % 4;
+    this.pixels = new Array(pixelPos.length);
+    for(var i=0; i < pixelPos.length; i++) {
+        this.pixels[i] = [0, 0, 0];
+    }
 
-    console.log(i, pane, x, y);
-    pixelPos[i] = [
-        pane * (paneWidth + paneSep) + 2*border + x * winWidth,
-        y*winHeight/2 + (1+ Math.floor(y / 2)) * border,
-    ];
-
+    this.drawInterval = setInterval(this.draw.bind(this), 16);
 }
 
-var c = document.getElementById("myCanvas");
-var ctx = c.getContext("2d");
-function draw() {
-    ctx.fillStyle = "rgb(0, 0, 0)";
+OPCArt.arts = [];
 
-    for(i=0; i<8; i++) {
-        ctx.fillRect(i*(paneWidth+paneSep), 0, paneWidth, paneHeight);
-    }
+OPCArt.prototype.draw = function() {
+    this.ctx.clearRect(0, 0, this.element.width, this.element.height);
 
     for(i=0; i< 96; i++) {
-        ctx.fillStyle = "rgb(" + pixels[i][0] + ", "
-                               + pixels[i][1] + ", "
-                               + pixels[i][2] + ")";
-        ctx.fillRect(pixelPos[i][0], pixelPos[i][1], winWidth, Math.ceil(winHeight / 2));
+        this.ctx.fillStyle = "rgb(" + this.pixels[i][0] + ", " +
+                                      this.pixels[i][1] + ", " +
+                                      this.pixels[i][2] + ")";
+        this.ctx.fillRect.apply(this.ctx, this.pixelPos[i]);
     }
 }
 
-function update() {
-    frameNumber += 1;
-    for(i=0;i<pixels.length;i++) {
-        pane = Math.floor(i / (12));
-        channel = Math.floor((pane % 6)/2);
+function buildPixelPos() {
+    var paneHeight = 87;
+    var paneWidth = 82;
+    var paneSep = 33;
+    var border = 2;
+    var winWidth = (paneWidth - 4 * border) / 3;
+    var winHeight = (paneHeight - 3 * border) / 2;
+
+    var pixelPos = new Array(96);
+     
+    for(var i=0;i<pixelPos.length;i++) {
+
+        var pane = Math.floor(i / 12);
+        var x = Math.floor(i / 4) % 3;
+        var y = i % 4;
+
+        pixelPos[i] = [
+            pane * (paneWidth + paneSep) + x * winWidth + border * (x+1),
+            y*winHeight/2 + (1+ Math.floor(y / 2)) * border,
+            winWidth,
+            Math.ceil(winHeight / 2)
+        ];
+    }
+    return pixelPos;
+}
+////// ART
+
+function Art() {}
+
+Art.prototype = {
+    updateMilliseconds: 100, // Time to wait between updating this art.
+                             // The renderer targets 60 FPS, so there's no need
+                             // to attempt to exceed 16ms.
+    start: function start(OPC) {
+        // Start the art.  Starts a frame counter and initializes the interval
+        // callback function.
+
+        this.pixels = OPC.pixels;
+        this.frameNumber = 0;
+        this.updateInterval = setInterval(this.nextFrame.bind(this),
+                                          this.updateMilliseconds);
+    },
+
+    stop: function stop() {
+        // Stop the art.
+        clearInterval(this.updateInterval);
+    },
+
+    nextFrame: function nextFrame() {
+        // Advance the frame count and invoke the art specific update method.
+        this.frameNumber += 1;
+        this.update.call(this);
+    },
+
+    update: function() {
+    },
+}
+//// ExampleArt suitable for lots of copy pasta.
+
+function ExampleArt() {}
+ExampleArt.prototype = Object.create(Art.prototype);
+ExampleArt.prototype.description = "Copy Pasta me to create new art.";
+
+ExampleArt.prototype.start = function start(OPC) {
+    Art.prototype.start.apply(this, arguments);
+    // Initialize any art specific data here.  `this` provides storage for any
+    // locals you want to persist state for.
+}
+ExampleArt.prototype.stop = function start() {
+    Art.prototype.stop.apply(this, arguments);
+    // Cleanup any locally allocated data here if required.
+    // Many art implementations may choose to ignore this method.
+}
+
+ExampleArt.prototype.update = function update() {
+    // The super method does nothing here so not including it as a template.
+    // This method should update the this.pixels array for a new frame.
+}
+
+/// Gradient
+
+function Gradient() {}
+Gradient.prototype = Object.create(Art.prototype);
+Gradient.prototype.description = "Cycle single color gradients on each face.";
+
+Gradient.prototype.update = function() {
+    for(i=0;i<this.pixels.length;i++) {
+        var pane = Math.floor(i / (12));
+        var channel = Math.floor((pane % 6)/2);
         if(pane<4) {
-            pixels[i][channel] = Math.min(255, Math.abs((16*(Math.floor(i/4)+frameNumber)) % 512 - 256));
+            this.pixels[i][channel] = Math.min(255, Math.abs((16*(Math.floor(i/4)+this.frameNumber)) % 512 - 256));
         } else {
-            pixels[i][channel] = Math.min(255, Math.abs((32*(Math.floor(i%4)+frameNumber)) % 512 - 256));
+            this.pixels[i][channel] = Math.min(255, Math.abs((32*(Math.floor(i%4)+this.frameNumber)) % 512 - 256));
         }
     }
 }
 
-drawInterval = setInterval(draw, 16);
-updateInterval = setInterval(update, 100);
+
+//// Initialize and start the art.
+
+var c = document.getElementById("myCanvas");
+var pixelPos = buildPixelPos();
+var OPC = new OPCArt(c, pixelPos);
+
+art = new Gradient();
+art.start(OPC);
 
 </script>
 </html>
