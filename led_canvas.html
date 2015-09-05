@@ -1,0 +1,70 @@
+<html>
+<canvas id="myCanvas" width="887" height="87" style="border:1px solid #c3c3c3;">
+Your browser does not support the HTML5 canvas tag.
+</canvas>
+
+
+<script>
+var updateInterval;
+var frameNumber = 0;
+var pixels = new Array(96),
+    pixelPos = new Array(96);
+
+var scale = 1 / 5, 
+    paneHeight = 435 * scale,
+    paneWidth = 410 * scale,
+    paneSep = (45 + 60 + 60) * scale,
+    border = 10 * scale,
+    winWidth = (paneWidth - 4 * border) / 3,
+    winHeight = (paneHeight - 3 * border) / 2;
+ 
+for(var i=0;i<pixels.length;i++) {
+    pixels[i] = [0,0,0];
+
+    var pane = Math.floor(i / 12);
+    var x = Math.floor(i / 4) % 3,
+        y = i % 4;
+
+    console.log(i, pane, x, y);
+    pixelPos[i] = [
+        pane * (paneWidth + paneSep) + 2*border + x * winWidth,
+        y*winHeight/2 + (1+ Math.floor(y / 2)) * border,
+    ];
+
+}
+
+var c = document.getElementById("myCanvas");
+var ctx = c.getContext("2d");
+function draw() {
+    ctx.fillStyle = "rgb(0, 0, 0)";
+
+    for(i=0; i<8; i++) {
+        ctx.fillRect(i*(paneWidth+paneSep), 0, paneWidth, paneHeight);
+    }
+
+    for(i=0; i< 96; i++) {
+        ctx.fillStyle = "rgb(" + pixels[i][0] + ", "
+                               + pixels[i][1] + ", "
+                               + pixels[i][2] + ")";
+        ctx.fillRect(pixelPos[i][0], pixelPos[i][1], winWidth, Math.ceil(winHeight / 2));
+    }
+}
+
+function update() {
+    frameNumber += 1;
+    for(i=0;i<pixels.length;i++) {
+        pane = Math.floor(i / (12));
+        channel = Math.floor((pane % 6)/2);
+        if(pane<4) {
+            pixels[i][channel] = Math.min(255, Math.abs((16*(Math.floor(i/4)+frameNumber)) % 512 - 256));
+        } else {
+            pixels[i][channel] = Math.min(255, Math.abs((32*(Math.floor(i%4)+frameNumber)) % 512 - 256));
+        }
+    }
+}
+
+drawInterval = setInterval(draw, 16);
+updateInterval = setInterval(update, 100);
+
+</script>
+</html>
