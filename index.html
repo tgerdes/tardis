@@ -128,14 +128,14 @@ Gradient.prototype.update = function() {
         var y = ((i % 12) % 4);
         var channel = Math.floor((pane % 6)/2);
         if(pane<2) {
-            this.pixels[i][channel] = Math.min(255, Math.abs(wrapIndex(16*(x + this.frameNumber), 512) - 256));
+            this.pixels[i][channel] = Math.min(255, Math.abs(wrapIndex(8*(x + this.frameNumber), 512) - 256));
         } else if (pane < 4) {
-            this.pixels[i][channel] = Math.min(255, Math.abs(wrapIndex(16*(x - this.frameNumber+8), 512) - 256));
+            this.pixels[i][channel] = Math.min(255, Math.abs(wrapIndex(8*(y + this.frameNumber+8), 512) - 256));
         } else if (pane < 6) {
-            this.pixels[i][channel] = Math.min(255, Math.abs(wrapIndex(16*(y + this.frameNumber+16), 512) - 256));
+            this.pixels[i][channel] = Math.min(255, Math.abs(wrapIndex(8*(x - this.frameNumber-16), 512) - 256));
         } else {
             this.pixels[i][0] =
-            this.pixels[i][2] = Math.min(255, Math.abs(wrapIndex(16*(y - this.frameNumber+24), 512) - 256));
+            this.pixels[i][2] = Math.min(255, Math.abs(wrapIndex(8*(y - this.frameNumber-24), 512) - 256));
         }
     }
 }
