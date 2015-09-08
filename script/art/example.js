@@ -8,6 +8,10 @@ define(['../art'], function(Art) {
 
     ExampleArt.prototype.start = function start(OPC) {
         Art.prototype.start.apply(this, arguments);
+        // Many art implementations can leave this alone to use the default
+        // start method.
+    }
+    ExampleArt.prototype.initialize = function start(OPC) {
         // Initialize any art specific data here.  `this` provides storage for
         // any locals you want to persist state for.
     }

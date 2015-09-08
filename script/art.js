@@ -12,8 +12,14 @@ define(function(require) {
 
             this.pixels = OPC.pixels;
             this.frameNumber = 0;
+
+            this.initialize();
+
             this.updateInterval = setInterval(this.nextFrame.bind(this),
                                               this.updateMilliseconds);
+        },
+
+        initialize: function() {
         },
 
         stop: function stop() {
