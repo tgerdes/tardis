@@ -1,4 +1,5 @@
 define([
+    './revolve',
     './chase',
     './solid',
     './faces',
