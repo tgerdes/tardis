@@ -1,4 +1,5 @@
 define([
+    './chase',
     './solid',
     './faces',
     './gradient',
