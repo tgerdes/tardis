@@ -1,6 +1,8 @@
 require.config({
     paths: {
         d3: "https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min",
+        jquery: "https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min",
+        select2: "https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/js/select2",
     },
     waitSeconds: 40
 });
@@ -31,15 +33,36 @@ define(function(require) {
         }
         return pixelPos;
     }
+
     //// Initialize and start the art.
     var Renderer = require('./renderer');
-    var Gradient = require('./art/gradient');
-    var Sine = require('./art/sine');
-
     var c = document.getElementById("myCanvas");
     var pixelPos = buildPixelPos();
     var OPC = new Renderer(c, pixelPos);
 
-    art = new Sine();
-    art.start(OPC);
+    require('select2');
+    var $ = require('jquery');
+    var art = require('./art/all');
+    var currentArt = art[0];
+    $(document).ready(function() {
+        function formatOption(option) {
+            var $opt = $(
+                '<span>' + option.text + ': ' + option.description + '</span>'
+            );
+            return $opt;
+        }
+
+        var data = [];
+
+        $("select.art").select2({
+            templateResult: formatOption,
+            data: art,
+        })
+        .on("select2:select", function(e) {
+            currentArt.value.stop();
+            currentArt = e.params.data;
+            currentArt.value.start(OPC);
+        });
+    });
+    currentArt.value.start(OPC);
 });

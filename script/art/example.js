@@ -3,6 +3,7 @@ define(['../art'], function(Art) {
 
     function ExampleArt() {}
     ExampleArt.prototype = Object.create(Art.prototype);
+    ExampleArt.prototype.name = "Example Art";
     ExampleArt.prototype.description = "Copy Pasta me to create new art.";
 
     ExampleArt.prototype.start = function start(OPC) {

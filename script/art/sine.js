@@ -5,7 +5,8 @@ define(['../art', 'd3'], function(Art, d3) {
         this.toint = d3.scale.linear().domain([0, 1]).rangeRound([255, 0]);
     }
     Sine.prototype = Object.create(Art.prototype);
-    Sine.prototype.description = "Cycle single color gradients on each face.";
+    Sine.prototype.name = "Sine";
+    Sine.prototype.description = "Three sine waves slightly out of phase.";
 
 
     Sine.prototype.update = function() {

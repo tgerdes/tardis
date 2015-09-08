@@ -1,4 +1,4 @@
-define(function(require) {
+define(['d3'], function(d3) {
     var Renderer = function(element, pixelPos) {
         this.element = element;
         this.ctx = element.getContext("2d");
