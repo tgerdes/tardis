@@ -32,9 +32,9 @@ define(['../art', 'd3'], function(Art, d3) {
 
     Faces.prototype.update = function update() {
         for(var i=0;i<this.pixels.length;i++) {
-            var pane = Math.floor(i / (24));
+            var face = Math.floor(i / (24));
             this.pixels[i] = this.scale(
-                (pane * this.faceOffset + this.speedMultiplier * this.frameNumber) % this.totalFrames
+                (face * this.faceOffset + this.speedMultiplier * this.frameNumber) % this.totalFrames
             );
         }
     }

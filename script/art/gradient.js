@@ -10,14 +10,14 @@ define(['../art', 'd3'], function(Art, d3) {
 
     Gradient.prototype.update = function() {
         for(i=0;i<this.pixels.length;i++) {
-            var pane = Math.floor(i / (12));
+            var face = Math.floor(i / (24));
             var x = Math.floor((i % 12) / 4);
             var y = ((i % 12) % 4);
-            if(pane<2) {
+            if(face==0) {
                 this.pixels[i] = d3.rgb(this.interp(Math.sin(this.step * (x+this.frameNumber))), 0, 0);
-            } else if (pane < 4) {
+            } else if (face == 1) {
                 this.pixels[i] = d3.rgb(0, this.interp(Math.sin(this.step * (y+this.frameNumber))), 0);
-            } else if (pane < 6) {
+            } else if (face == 2) {
                 this.pixels[i] = d3.rgb(0, 0, this.interp(Math.sin(this.step * (x-this.frameNumber))));
             } else {
                 var v = this.interp(Math.sin(this.step * (y-this.frameNumber)));
