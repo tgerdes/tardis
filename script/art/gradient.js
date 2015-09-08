@@ -8,7 +8,6 @@ define(['../art', 'd3'], function(Art, d3) {
     Gradient.prototype.name = "Gradient";
     Gradient.prototype.description = "Cycle single color gradients on each face.";
 
-
     Gradient.prototype.update = function() {
         for(i=0;i<this.pixels.length;i++) {
             var pane = Math.floor(i / (12));

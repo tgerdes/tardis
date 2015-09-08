@@ -1,4 +1,5 @@
 define([
+    './faces',
     './gradient',
     './sine',
 ], function() {
