@@ -1,4 +1,5 @@
 define([
+    './solid',
     './faces',
     './gradient',
     './sine',
