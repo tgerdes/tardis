@@ -1,12 +1,10 @@
 define(['../art', 'd3'], function(Art, d3) {
-    //// Solid suitable for lots of copy pasta.
 
-    function Solid() {}
-    Solid.prototype = Object.create(Art.prototype);
-    Solid.prototype.name = "Solid";
-    Solid.prototype.description = "All LEDs are the same color, with slow transition to random color.";
+return Art.newArt({
+    name: "Solid",
+    description: "All LEDs are the same color, with slow transition to random color.",
 
-    Solid.prototype.initialize = function start(OPC) {
+    initialize: function initialize() {
         this.source = d3.hsl(Math.floor(Math.random() * 360), 1, 0.5);
         this.dest = d3.hsl(Math.floor(Math.random() * 360), 1, 0.5);
         this.framesPerColor = 100;
@@ -14,10 +12,9 @@ define(['../art', 'd3'], function(Art, d3) {
             .domain([0, this.framesPerColor])
             .interpolate(d3.interpolateHcl)
             .range([this.source, this.dest]);
+    },
 
-    }
-
-    Solid.prototype.update = function update() {
+    update: function update() {
         var val = this.frameNumber % this.framesPerColor;
         if (val == 0) {
             this.source = this.dest;
@@ -28,7 +25,7 @@ define(['../art', 'd3'], function(Art, d3) {
         for(var i=0;i<this.pixels.length;i++) {
             this.pixels[i] = pix;
         }
-    }
+    },
+});
 
-    return Solid;
 });

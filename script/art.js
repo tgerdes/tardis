@@ -37,5 +37,16 @@ define(function(require) {
         update: function() {
         },
     }
+
+    Art.newArt = function newArt(args) {
+        var art = function() {};
+        art.prototype = Object.create(Art.prototype);
+        for (var key in args) {
+            art.prototype[key] = args[key];
+        }
+
+        return art;
+    }
+
     return Art;
 });

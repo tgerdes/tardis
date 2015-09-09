@@ -1,14 +1,16 @@
 define(['../art', 'd3'], function(Art, d3) {
-    function Gradient() {
+
+return Art.newArt({
+    name: "Gradient",
+    description: "Cycle single color gradients on each face.",
+
+    initialize: function () {
         // Interpolate the range -1, 1 to the integers 0, 255
         this.interp = d3.scale.linear().domain([-1,1]).rangeRound([0,255]);
         this.step = 2 * Math.PI / 16;
-    }
-    Gradient.prototype = Object.create(Art.prototype);
-    Gradient.prototype.name = "Gradient";
-    Gradient.prototype.description = "Cycle single color gradients on each face.";
+    },
 
-    Gradient.prototype.update = function() {
+    update: function() {
         for(i=0;i<this.pixels.length;i++) {
             var face = Math.floor(i / (24));
             var x = Math.floor((i % 12) / 4);
@@ -24,6 +26,7 @@ define(['../art', 'd3'], function(Art, d3) {
                 this.pixels[i] = d3.rgb(v, 0, v);
             }
         }
-    }
-    return Gradient;
+    },
+});
+
 });

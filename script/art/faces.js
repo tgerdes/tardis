@@ -1,12 +1,10 @@
 define(['../art', 'd3'], function(Art, d3) {
-    //// Faces suitable for lots of copy pasta.
 
-    function Faces() {}
-    Faces.prototype = Object.create(Art.prototype);
-    Faces.prototype.name = "Faces";
-    Faces.prototype.description = "Each Face transitions solid between rainbow colors.";
+return Art.newArt({
+    name: "Faces",
+    description: "Each Face transitions solid between rainbow colors.",
 
-    Faces.prototype.initialize = function start(OPC) {
+    initialize: function start(OPC) {
         var keyColors = [
             d3.rgb("red"),
             d3.rgb("orange"),
@@ -28,16 +26,16 @@ define(['../art', 'd3'], function(Art, d3) {
             .interpolate(d3.interpolateHcl)
             .range(keyColors);
 
-    }
+    },
 
-    Faces.prototype.update = function update() {
+    update: function update() {
         for(var i=0;i<this.pixels.length;i++) {
             var face = Math.floor(i / (24));
             this.pixels[i] = this.scale(
                 (face * this.faceOffset + this.speedMultiplier * this.frameNumber) % this.totalFrames
             );
         }
-    }
+    },
+});
 
-    return Faces;
 });

@@ -1,12 +1,9 @@
 define(['../art', 'd3'], function(Art, d3) {
-    //// Chase suitable for lots of copy pasta.
 
-    function Chase() {}
-    Chase.prototype = Object.create(Art.prototype);
-    Chase.prototype.name = "Chase";
-    Chase.prototype.description = "Knightrider style LED chaser";
-
-    Chase.prototype.update = function update() {
+return Art.newArt({
+    name: "Chase",
+    description: "Knightrider style LED chaser",
+    update: function update() {
         var col = this.frameNumber % 12;
         if (col > 5) {
             col = 11 - col;
@@ -19,7 +16,7 @@ define(['../art', 'd3'], function(Art, d3) {
                 this.pixels[i] = d3.rgb(0, 0, 0);
             }
         }
-    }
+    },
+});
 
-    return Chase;
 });
