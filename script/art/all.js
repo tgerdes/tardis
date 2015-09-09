@@ -1,5 +1,7 @@
 define([
+    './audio',
     './hello',
+    './random',
     './revolve',
     './chase',
     './solid',
