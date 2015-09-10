@@ -7,7 +7,7 @@ return Art.newArt({
     initialize: function initialize() {
         this.source = d3.hsl(Math.floor(Math.random() * 360), 1, 0.5);
         this.dest = d3.hsl(Math.floor(Math.random() * 360), 1, 0.5);
-        this.framesPerColor = 100;
+        this.framesPerColor = 50;
         this.scale = d3.scale.linear()
             .domain([0, this.framesPerColor])
             .interpolate(d3.interpolateHcl)

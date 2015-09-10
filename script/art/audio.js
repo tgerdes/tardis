@@ -30,16 +30,17 @@ return Art.newArt({
             d3.scale.linear().domain([64,127]).range([0,0.5]).clamp(true),
             d3.scale.linear().domain([0,63]).range([0,0.5]).clamp(true),
         ]
-        this.hue = d3.scale.linear().domain([0,255]).range([360,0]);
+        this.hue = d3.scale.linear().domain([0,255]).range([120,0]);
     },
     update: function update() {
         var bufferLength = this.analyser.frequencyBinCount;
         var dataArray = new Uint8Array(bufferLength);
         this.analyser.getByteFrequencyData(dataArray);
         for(var x=0; x<24; x++) {
+            v = dataArray[x]
             for (y=0; y < 4; y++) {
                 var i = x*4 + y;
-                this.pixels[i] = d3.hsl(this.hue(dataArray[x]), 0.5, this.rows[y](dataArray[x]));
+                this.pixels[i] = d3.hsl(this.hue(v), 1.0, this.rows[y](v));
             }
         }
     },
