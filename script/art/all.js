@@ -1,13 +1,13 @@
 define([
-    './audio',
+    './solid',
     './hello',
     './random',
     './revolve',
     './chase',
-    './solid',
     './faces',
     './gradient',
     './sine',
+    './audio',
 ], function() {
     var arts = Array.prototype.slice.call(arguments);
     return arts.map(function(art) { return new (art)() }).map(function(art, i) {
