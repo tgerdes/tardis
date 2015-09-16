@@ -24,15 +24,15 @@ define(['d3', 'jquery'], function(d3, $) {
 
     Renderer.prototype.draw = function() {
         this.ctx.clearRect(0, 0, this.element.width, this.element.height);
-        var opc_buf = new Uint8Array(4 + this.pixels.length);
+        var opc_buf = new Uint8Array(4 + this.pixels.length*3);
 
         for(i=0; i < this.pixels.length; i++) {
             this.ctx.fillStyle = this.pixels[i].toString();
             this.ctx.fillRect.apply(this.ctx, this.pixelPos[i]);
             var pix = d3.rgb(this.pixels[i]);
-            opc_buf[4+0+i] = pix.r;
-            opc_buf[4+1+i] = pix.g;
-            opc_buf[4+2+i] = pix.b;
+            opc_buf[4+0+i*3] = pix.r;
+            opc_buf[4+1+i*3] = pix.g;
+            opc_buf[4+2+i*3] = pix.b;
         }
 
         if (this.socket.readyState == WebSocket.OPEN) {
